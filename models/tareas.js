@@ -21,9 +21,22 @@ class Tareas {
         
     }
 
+    get listadoArr(){
 
-    listarTarea(){
-        
+        const listado = [];
+
+        Object.keys(this._listado).forEach(key => {
+            const  tarea = this._listado[key];
+            listado.push(tarea);
+        });
+
+        return listado;
+    }
+
+    cargarTareasFromArray( tareas = []){
+        tareas.forEach(tarea => {
+            this._listado[tarea.id] = tarea;
+        });
     }
     
 }
