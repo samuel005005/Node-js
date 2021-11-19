@@ -40,18 +40,30 @@ class Tareas {
         });
     }
 
-    listadoCompleto() {
-        console.log('\n');
-        this.listadoArr.forEach( ( tarea , index) => {  
+    listadoTemplate(tareas) {
+        tareas.forEach( ( tarea , index) => {  
             const { desc , compleadoEn } = tarea;
             const position = `${index + 1}`.green;
             const estado = (compleadoEn == null ? 'Pendiente'.red : 'Completado'.green);
 
             console.log(`${position} ${desc} :: ${estado}`);
         });
-       
     }
-    
+
+    listadoCompleto() {
+        console.log('\n');
+        this.listadoTemplate(this.listadoArr);
+    }
+
+    listarPendientesCompletadas ( completadas = true ){
+        console.log('\n');
+        const tareas =  this.listadoArr
+                            .filter( tarea => ((completadas)  
+                                                    ? tarea.compleadoEn != null 
+                                                    : tarea.compleadoEn == null)
+                                    );
+        this.listadoTemplate(tareas);
+    }
 }
 
 
