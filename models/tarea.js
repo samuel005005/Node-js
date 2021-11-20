@@ -4,12 +4,12 @@ class Tarea {
 
     id = '';
     desc = '';
-    compleadoEn = null;
+    completadoEn = null;
 
     constructor ( desc ){
         this.id = uuidv4();
         this.desc = desc;
-        this.compleadoEn =  null;
+        this.completadoEn =  null;
     }
     
 }

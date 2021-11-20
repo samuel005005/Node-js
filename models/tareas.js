@@ -48,9 +48,9 @@ class Tareas {
 
     listadoTemplate(tareas) {
         tareas.forEach( ( tarea , index) => {  
-            const { desc , compleadoEn } = tarea;
+            const { desc , completadoEn } = tarea;
             const position = `${index + 1}.`.green;
-            const estado = (compleadoEn == null ? 'Pendiente'.red : `${compleadoEn}`.green);
+            const estado = (completadoEn == null ? 'Pendiente'.red : `${completadoEn}`.green);
 
             console.log(`${position} ${desc} :: ${estado}`);
         });
@@ -65,12 +65,25 @@ class Tareas {
         console.log('\n');
         const tareas =  this.listadoArr
                             .filter( tarea => ((completadas)  
-                                                    ? tarea.compleadoEn != null 
-                                                    : tarea.compleadoEn == null)
+                                                    ? tarea.completadoEn != null 
+                                                    : tarea.completadoEn == null)
                                     );
         this.listadoTemplate(tareas);
     }
-}
 
+    toggleCompletadas ( ids = [] ){
+        ids.forEach(id => {
+            const tarea = this._listado[id];
+            if( !tarea.completadoEn ){
+                tarea.completadoEn = new Date().toISOString();
+            }
+        });
+        this.listadoArr.forEach(tarea => {
+            if(!ids.includes(tarea.id)){ 
+               this._listado[tarea.id].completadoEn = null;
+            }
+        });
+    }
+}
 
 module.exports = Tareas;
