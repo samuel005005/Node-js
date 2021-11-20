@@ -15,6 +15,12 @@ class Tareas {
         this._listado = {};
     }
 
+    borrarTarea ( id = '' ){
+        if(this._listado[id]){
+            delete this._listado[id];
+        }
+    }
+
     crearTarea ( desc = ''){
 
         const tarea = new Tarea(desc);
@@ -43,8 +49,8 @@ class Tareas {
     listadoTemplate(tareas) {
         tareas.forEach( ( tarea , index) => {  
             const { desc , compleadoEn } = tarea;
-            const position = `${index + 1}`.green;
-            const estado = (compleadoEn == null ? 'Pendiente'.red : 'Completado'.green);
+            const position = `${index + 1}.`.green;
+            const estado = (compleadoEn == null ? 'Pendiente'.red : `${compleadoEn}`.green);
 
             console.log(`${position} ${desc} :: ${estado}`);
         });
