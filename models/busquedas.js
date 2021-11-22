@@ -16,7 +16,7 @@ class Busquedas {
         }
     }
 
-    async ciudad ( lugar = '') {
+    async ciudades ( lugar = '') {
      try {
         // Peticion HTTP
       
@@ -26,9 +26,14 @@ class Busquedas {
         });
 
         const resp = await instance.get();
-        console.log (`ciudad: `,resp.data);
+        
+        return resp.data.features.map ( lugar => ({
+            id: lugar.id,
+            nombre: lugar.place_name,
+            lng: lugar.center[0],
+            lat: lugar.center[1]
+        }));
 
-        return []; // retornar luegares
      } catch (error) {
          return [];
      }
