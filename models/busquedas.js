@@ -77,8 +77,9 @@ class Busquedas {
             return;
         }
 
+        this.history = this.history.splice(0,5);
         this.history.unshift(lugar.toLowerCase());
-
+        
         // Grabar en texto
         this.guardarDB();
     }
@@ -93,14 +94,11 @@ class Busquedas {
     }
 
     leerDB(){
-       
-        if(fs.existsSync(this.dbPath)){
-            const info = fs.readFileSync(this.dbPath, { encoding:'utf-8' });
-            const data  = JSON.parse(info);
-            this.history = data.historial;
-        }
+        if(!fs.existsSync(this.dbPath)) return;
+        const info = fs.readFileSync(this.dbPath, { encoding:'utf-8' });
+        const data  = JSON.parse(info);
+        this.history = data.historial;
     }
-
 }
 
 module.exports = Busquedas;
