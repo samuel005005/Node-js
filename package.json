@@ -1,0 +1,21 @@
+{
+  "name": "webserver-http-express-hbs",
+  "version": "0.0.1",
+  "description": "Web Services en node",
+  "main": "app.js",
+  "repository": "git@github.com:samuel005005/Node-De-cero-a-experto-Edici-n-2021-.git",
+  "author": "Samuel Paez <samuel005005@gmail.com.do>",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error no test specified\" && exit 1",
+    "start": "node app.js",
+    "startDev": "nodemon app.js"
+  },
+  "keywords": [],
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
