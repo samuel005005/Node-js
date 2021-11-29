@@ -1,9 +1,9 @@
 const express = require('express');
 const hbs = require('hbs');
 const path = require('path');
+require('dotenv').config();
 const public = path.join(__dirname,'public');
 const app = express();
-const port = 8080;
 
 
 /**
@@ -38,6 +38,6 @@ app.get('*', function (req, res) {
     res.sendFile(`${public}/404.html`,404);
 });
  
-app.listen(port,() => {
-    console.log(`App listening at port ${port}`);
+app.listen(process.env.PORT,() => {
+    console.log(`App listening at port ${process.env.PORT}`);
 });
