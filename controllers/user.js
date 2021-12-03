@@ -1,5 +1,7 @@
 const { response, request } = require('express');
 
+const Usuario = require('../models/user');
+
 const getUser = (req = request, res = response) => {
 
     const { q, name = "No Name", apikey, page = 1, limit } = req.query;
@@ -15,14 +17,16 @@ const getUser = (req = request, res = response) => {
 
 }
 
-const postUser = (req = request, res = response) => {
+const postUser = async (req = request, res = response) => {
 
     const { nombre, edad } = req.body;
 
+    const usuario = new Usuario( req.body );
+    
+    await usuario.save();
     res.json({
         'msj':'get API - controlador',
-        nombre,
-        edad
+        usuario
     });
 
 }

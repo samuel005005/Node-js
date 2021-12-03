@@ -1,7 +1,7 @@
 {
-  "name": "rest-server",
+  "name": "almacen-del-rest-server",
   "version": "0.0.1",
-  "description": "Rest server",
+  "description": "Almacen del rest server",
   "main": "app.js",
   "repository": "git@github.com:samuel005005/Node-De-cero-a-experto-Edici-n-2021-.git",
   "author": "Samuel Paez <samuel005005@gmail.com>",
@@ -11,9 +11,11 @@
     "startDev": "nodemon app.js"
   },
   "dependencies": {
+    "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^6.0.14"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
