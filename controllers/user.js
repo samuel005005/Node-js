@@ -3,22 +3,22 @@ const bcryptjs = require('bcryptjs');
 
 const Usuario = require('../models/user');
 
-const getUser = (req = request, res = response) => {
+const getUser = async (req = request, res = response) =>  {
 
     const { q, name = "No Name", apikey, page = 1, limit } = req.query;
 
+    const users = await Usuario.find({estado:true}).exec();
+    console.log(users);
     res.json({
         'msj':'get API - controlador',
-        q,
-        name,
-        apikey,
-        page,
-        limit
+        data: users
     });
 
 }
 
+
 const postUser = async (req = request, res = response) => {
+
 
     const { nombre, correo, password, rol } = req.body;
     const usuario = new Usuario({nombre, correo, password, rol});
@@ -70,8 +70,6 @@ const deleteUser = (req = request, res = response) => {
      
 }
 
-
- 
 module.exports = {
     getUser,
     postUser,

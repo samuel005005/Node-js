@@ -8,16 +8,16 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
 
-        /** Rutas Routes */
-        this.userPath = '/api/user';
+        /** Main Route */
+        this.path = '/api';
 
-        /** Conectar a DB */
+        /** Connect DB */
         this.conectarDB();
 
         /** Middlewares */
         this.middlewares();
 
-        /** Rutas de mi aplicacion */
+        /** Route of my application */
         this.routes();
     }
 
@@ -30,21 +30,21 @@ class Server {
         /** CORS */
         this.app.use(cors());
 
-        /** Lectura y parseo del body http */
+        /** Read and parse of http body */
         this.app.use(express.json());
 
-        /**  Directorio publico */
+        /** Public Directory */
         this.app.use(express.static('public'));
         
     }
 
     routes() {
-       this.app.use(this.userPath, require('../routes/users'));
+       this.app.use(this.path.concat('/user'), require('../routes/users'));
     }
 
     listen() {
         this.app.listen(this.port, () => {
-            console.log(`Servidor corriendo en el puerto ${this.port}`);
+            console.log(`Server is running in the port ${this.port}`);
         });
     }
 }
