@@ -1,3 +1,5 @@
+const bcryptjs = require('bcryptjs');
+
 const Role = require('../models/role');
 const Usuario = require('../models/user');
 
@@ -16,7 +18,22 @@ const existEmail = async ( correo = '') => {
     }
 }
 
+const encriptarPassword = (password ) =>{
+  
+    const salt = bcryptjs.genSaltSync();
+    return bcryptjs.hashSync( password , salt );
+}
+
+const existeUserById = async ( id ) => {
+    const existeUsuario = await Usuario.findById(id);
+    if(!existeUsuario) {
+        throw new Error(`El id ${id} no existe en la DB`);
+    }
+}
+
 module.exports = {
     isValidRole,
-    existEmail
+    existEmail,
+    encriptarPassword,
+    existeUserById
 }

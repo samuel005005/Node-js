@@ -1,5 +1,6 @@
 const { response, request } = require('express');
-const bcryptjs = require('bcryptjs');
+const { encriptarPassword } = require('../helpers/db-validators');
+
 
 const Usuario = require('../models/user');
 
@@ -23,9 +24,7 @@ const postUser = async (req = request, res = response) => {
     const usuario = new Usuario({nombre, correo, password, rol});
     
     /** Encriptar la contraseña */
-    const salt = bcryptjs.genSaltSync();
-    usuario.password = bcryptjs.hashSync( password , salt );
-
+    usuario.password = encriptarPassword(password);
     /** Guardar en DB */
     await usuario.save();
     res.json({
@@ -35,13 +34,22 @@ const postUser = async (req = request, res = response) => {
 
 }
 
-const putUser = (req = request, res = response) => {
+const putUser = async (req = request, res = response) => {
 
-    const id = req.params.id;
+    const { id }  = req.params;
+    const { _id, password, google , correo ,...properties } = req.body;
 
+    // TODO: Validar DB
+
+    if ( password ){
+        properties.password = encriptarPassword(password);
+    }
+
+    const users = await Usuario.findByIdAndUpdate(id,properties);
+    
     res.json({
         'msj':'get API - controlador',
-        id
+        users
     });
 }
 

@@ -7,7 +7,7 @@ const {
         patchUser, 
         deleteUser 
     } = require('../controllers/user');
-const { isValidRole, existEmail } = require('../helpers/db-validators');
+const { isValidRole, existEmail, existeUserById } = require('../helpers/db-validators');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 const router = Router();
@@ -25,7 +25,10 @@ router.post('/',[
     validarCampos
 ], postUser);
 
-router.put('/:id' ,putUser);
+router.put('/:id',[
+    check('id','No es un ID valido').isMongoId().custom(existeUserById),
+    validarCampos
+],putUser); 
 
 router.patch('/', patchUser);
 
