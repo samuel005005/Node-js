@@ -62,11 +62,13 @@ const patchUser = (req = request, res = response) => {
 
 }
 
-const deleteUser = (req = request, res = response) => {
+const deleteUser = async (req = request, res = response) => {
 
-    res.json({
-        'msj':'get API - controlador'
-    });
+    const { id } = req.params;
+
+    const users = await Usuario.findByIdAndUpdate(id, { estado : false });
+
+    res.json(users);
      
 }
 
