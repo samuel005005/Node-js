@@ -6,13 +6,20 @@ const Usuario = require('../models/user');
 
 const getUser = async (req = request, res = response) =>  {
 
-    const { q, name = "No Name", apikey, page = 1, limit } = req.query;
+    const { q,  apikey, page = 1, limite = 5, desde = 0 } = req.query;
 
-    const users = await Usuario.find({estado:true}).exec();
-    console.log(users);
+    const query = { estado : true };
+ 
+    const [ total ,users ] = await Promise.all([
+        Usuario.countDocuments(query),
+        Usuario.find(query)
+            .skip(Number(desde))
+            .limit(Number(limite))
+    ]); 
+    
     res.json({
-        'msj':'get API - controlador',
-        data: users
+        total,
+        users
     });
 
 }
@@ -27,10 +34,7 @@ const postUser = async (req = request, res = response) => {
     usuario.password = encriptarPassword(password);
     /** Guardar en DB */
     await usuario.save();
-    res.json({
-        'msj':'get API - controlador',
-        usuario
-    });
+    res.json(usuario);
 
 }
 
@@ -47,10 +51,7 @@ const putUser = async (req = request, res = response) => {
 
     const users = await Usuario.findByIdAndUpdate(id,properties);
     
-    res.json({
-        'msj':'get API - controlador',
-        users
-    });
+    res.json(users);
 }
 
 const patchUser = (req = request, res = response) => {
