@@ -35,11 +35,14 @@ class Server {
 
         /** Public Directory */
         this.app.use(express.static('public'));
+
+        console.log(this.path.concat('/auth'));
         
     }
 
     routes() {
        this.app.use(this.path.concat('/user'), require('../routes/users'));
+       this.app.use(this.path.concat('/auth'), require('../routes/auth'));
     }
 
     listen() {
