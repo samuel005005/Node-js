@@ -1,5 +1,6 @@
 const { response } = require("express");
 const bcryptjs = require("bcryptjs");
+const generarJWT = require("../helpers/generar-jwt");
 
 
 const login = async (req , res = response) =>  {
@@ -9,8 +10,7 @@ const login = async (req , res = response) =>  {
 
     try {
         // Validar si existe el email
-        const usuario = await Usuario.findOne({ correo });
-
+        const usuario = await Usuario.findOne({ correo , estado : true});
 
         if( !usuario ){
             return res.status(400).json({
@@ -41,11 +41,12 @@ const login = async (req , res = response) =>  {
 
 
         res.json({
-            "msg":"Login"
+            usuario,
+            token
         });
         
     } catch (error) {
-        console.log(error);
+        console.log(error.message);
         res.status(500).json({
             "msg":"Hable con el administrador",
         }); 

@@ -12,7 +12,7 @@ const dbConnection = async () => {
         console.log('Data base is online '.green); 
 
     } catch (error) {
-        console.log(error); 
+        console.log(error.message); 
         throw new Error('Error starting data base');
     }
 }
