@@ -19,9 +19,9 @@ const UsuarioSchema = Schema({
         type:String
     },
     rol:{
-        type:String,
-        required: true,
-        enum: ['ADMIN_ROLE','USER_ROLE']
+        required:true,
+        type: Schema.Types.ObjectId,
+        ref: 'Role' 
     },
     estado:{
         type:Boolean,

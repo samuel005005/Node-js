@@ -5,7 +5,7 @@ const Usuario = require('../models/user');
 const validarJWT =  async ( req = request, res = response, next ) => {
 
     const token = req.header('x-token');
-
+ 
     if (!token) {
         return res.status(401).json({
             msg: 'No hay token en la peticion'
@@ -16,12 +16,17 @@ const validarJWT =  async ( req = request, res = response, next ) => {
 
         const  { uid } = jsonwebtoken.verify(token, process.env.SECRETORPRIVATEKEY);
 
-        const user  = await Usuario.findById( uid );
+        const userLogged  = await Usuario.findById( uid );
 
-        if(!user.status){
-            throw { message : 'Usuario no existe' };
+        if(!userLogged){
+            throw { message : 'Usuario logueado no existe en DB' };
         }
-        req.user = user;
+ 
+        if(!userLogged.estado){
+            throw { message : 'Usuario logueado no existe STATUS FALSE' };
+        }
+
+        req.userLogged = userLogged;
 
         next();
         

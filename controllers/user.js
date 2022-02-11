@@ -1,5 +1,6 @@
 const { response, request } = require('express');
 const { encriptarPassword } = require('../helpers/db-validators');
+const Role = require('../models/role');
 
 
 const Usuario = require('../models/user');
@@ -28,12 +29,18 @@ const getUser = async (req = request, res = response) =>  {
 const postUser = async (req = request, res = response) => {
 
     const { nombre, correo, password, rol } = req.body;
-    const usuario = new Usuario({nombre, correo, password, rol});
+
+    /** Leyendo el role en la base de datos */
+    const { id } = await Role.findOne({role:rol});
+
+    const usuario = new Usuario({nombre, correo, password, rol:id});
     
     /** Encriptar la contraseña */
     usuario.password = encriptarPassword(password);
+
     /** Guardar en DB */
     await usuario.save();
+
     res.json(usuario);
 
 }
@@ -68,7 +75,7 @@ const deleteUser = async (req = request, res = response) => {
 
     const users = await Usuario.findByIdAndUpdate(id, { estado : false });
 
-    const  authenticatedUser = req.user;
+    const  authenticatedUser = req.userLogged;
     
     res.json({users,authenticatedUser});
      
