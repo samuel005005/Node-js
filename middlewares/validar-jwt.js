@@ -14,7 +14,7 @@ const validarJWT =  async ( req = request, res = response, next ) => {
 
     try {
 
-        const  { uid } = jsonwebtoken.verify(token, process.env.SECRETORPRIVATEKEY);
+        const  { uid } = jsonwebtoken.verify(token, process.env.SECRET_OR_PRIVATEKEY);
 
         const userLogged  = await Usuario.findById( uid );
 

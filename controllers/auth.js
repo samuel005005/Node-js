@@ -1,6 +1,8 @@
 const { response } = require("express");
 const bcryptjs = require("bcryptjs");
 const generarJWT = require("../helpers/generar-jwt");
+const { googleVerify } = require("../helpers/google-verify");
+const User = require("../models/user");
 
 
 const login = async (req , res = response) =>  {
@@ -36,7 +38,6 @@ const login = async (req , res = response) =>  {
         }
 
         // Generar el JWT
-
         const token = await generarJWT( usuario.id );
 
 
@@ -54,7 +55,60 @@ const login = async (req , res = response) =>  {
 
 }
 
+const googleSignIn =  async ( req, res = response ) => {
+
+    const { id_token } = req.body;
+
+
+    try {
+
+        const { correo, nombre, img }  =  await googleVerify(id_token);
+
+        let usuario = await User.findOne({ correo });
+
+        if ( !usuario ){
+
+            const data = {
+                nombre,
+                correo,
+                password : ':P',
+                rol:'USER_ROLE',
+                img,
+                google:true
+                
+            }
+
+            usuario = new User( data );
+
+            await usuario.save();
+
+        }
+
+        if ( !usuario.estado ) {
+            return res.status(401).json({
+                msg: 'Favor comuncarse con el administrador del sistema',   
+            });   
+        }
+
+        // Generar el JWT
+        const token = await generarJWT( usuario.id );
+    
+        res.json({
+            token,
+            usuario   
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Error verificando el token'   
+        })
+    }
+   
+}
+
 
 module.exports = {
-    login
+    login,
+    googleSignIn
 }
