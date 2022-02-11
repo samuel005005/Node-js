@@ -32,8 +32,8 @@ const getUserId = async ( req =request, res= response ) => {
     const usuario =  await Usuario.findById(id);
 
     if( !usuario.estado ){
-        return res.status(500).json({
-            msj:'Usuario no activo'
+        return res.status(400).json({
+            msg:'Usuario no activo'
         });
     }
 
