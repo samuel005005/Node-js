@@ -30,10 +30,7 @@ const postUser = async (req = request, res = response) => {
 
     const { nombre, correo, password, rol } = req.body;
 
-    /** Leyendo el role en la base de datos */
-    const { id } = await Role.findOne({role:rol});
-
-    const usuario = new Usuario({nombre, correo, password, rol:id});
+    const usuario = new Usuario({nombre, correo, password, rol});
     
     /** Encriptar la contraseña */
     usuario.password = encriptarPassword(password);
@@ -49,8 +46,6 @@ const putUser = async (req = request, res = response) => {
 
     const { id }  = req.params;
     const { _id, password, google , correo ,...properties } = req.body;
-
-    // TODO: Validar DB
 
     if ( password ){
         properties.password = encriptarPassword(password);

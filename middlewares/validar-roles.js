@@ -8,13 +8,9 @@ const esAdminRole = async ( req , res = response, next ) => {
             msg:'Se quiere verificar el rol sin validar el token primero'
         });
     }
-
     const { rol,  nombre } = req.userLogged;
 
-    /** Leyendo el role en la base de datos */
-    const { role }  = await Role.findById(rol);
-
-    if( role !== 'ADMIN_ROLE'){
+    if( rol !== 'ADMIN_ROLE'){
 
       return  res.status(500).json({
             msg: `${ nombre } no es administrador - No tiene permiso para realizar esta accion`
@@ -25,7 +21,28 @@ const esAdminRole = async ( req , res = response, next ) => {
 
 }
 
+const tieneRole = ( ...roles ) => {
+   
+    return ( req , res = response , next ) => {
+
+        if( !req.userLogged ){
+            return  res.status(500).json({
+                msg:'Se quiere verificar el rol sin validar el token primero'
+            });
+        }
+
+        if( !roles.includes(req.userLogged.rol) ){
+            return  res.status(401).json({
+                msg: `No tiene permiso para realizar esta accion`
+            });
+        }
+        
+        next();
+    }
+}
+
 
 module.exports = {
-    esAdminRole
+    esAdminRole,
+    tieneRole
 }
