@@ -41,8 +41,11 @@ class Server {
     }
 
     routes() {
-       this.app.use(this.path.concat('/user'), require('../routes/users'));
+
+       this.app.use(this.path.concat('/usuarios'), require('../routes/usuarios'));
        this.app.use(this.path.concat('/auth'), require('../routes/auth'));
+       this.app.use(this.path.concat('/categorias'), require('../routes/categorias'));
+       
     }
 
     listen() {

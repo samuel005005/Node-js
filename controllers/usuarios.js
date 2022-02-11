@@ -1,10 +1,10 @@
 const { response, request } = require('express');
-const { encriptarPassword } = require('../helpers/db-validators');
-const Role = require('../models/role');
+const { encriptarPassword } = require('../helpers');
 
-
-const Usuario = require('../models/user');
-
+const { Usuario } = require('../models');
+/**
+ * {{url}}/api/usuarios
+ */
 const getUser = async (req = request, res = response) =>  {
 
     const { q,  apikey, page = 1, limite = 5, desde = 0 } = req.query;
@@ -23,6 +23,21 @@ const getUser = async (req = request, res = response) =>  {
         users
     });
 
+}
+
+const getUserId = async ( req =request, res= response ) => {
+
+    const { id } = req.params;
+
+    const usuario =  await Usuario.findById(id);
+
+    if( !usuario.estado ){
+        return res.status(500).json({
+            msj:'Usuario no activo'
+        });
+    }
+
+    res.json(usuario);
 }
 
 
@@ -81,5 +96,6 @@ module.exports = {
     postUser,
     putUser,
     patchUser,
-    deleteUser
+    deleteUser,
+    getUserId
 }

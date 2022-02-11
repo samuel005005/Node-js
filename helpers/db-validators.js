@@ -1,7 +1,6 @@
 const bcryptjs = require('bcryptjs');
 
-const Role = require('../models/role');
-const Usuario = require('../models/user');
+const { Role, Usuario} = require('../models');
 
 const isValidRole = async ( rol = '') => {
     const existeRol = await Role.findOne({ role:rol }); 

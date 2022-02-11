@@ -1,14 +1,14 @@
 const { response } = require("express");
 const bcryptjs = require("bcryptjs");
-const generarJWT = require("../helpers/generar-jwt");
-const { googleVerify } = require("../helpers/google-verify");
-const User = require("../models/user");
+
+const { googleVerify , generarJWT } = require("../helpers");
+const { Usuario } = require('../models');
 
 
 const login = async (req , res = response) =>  {
 
     const { correo, password } = req.body;
-    const Usuario = require('../models/user');
+   
 
     try {
         // Validar si existe el email
@@ -59,12 +59,11 @@ const googleSignIn =  async ( req, res = response ) => {
 
     const { id_token } = req.body;
 
-
     try {
 
         const { correo, nombre, img }  =  await googleVerify(id_token);
 
-        let usuario = await User.findOne({ correo });
+        let usuario = await Usuario.findOne({ correo });
 
         if ( !usuario ){
 
@@ -78,7 +77,7 @@ const googleSignIn =  async ( req, res = response ) => {
                 
             }
 
-            usuario = new User( data );
+            usuario = new Usuario( data );
 
             await usuario.save();
 
