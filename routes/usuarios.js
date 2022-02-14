@@ -9,7 +9,7 @@ const {
         deleteUser 
     } = require('../controllers');
     
-const { isValidRole, existEmail, existeUserById } = require('../helpers');
+const { isValidRole, existEmail, existeUsuarioById } = require('../helpers');
 
 const {
     validarCampos,
@@ -23,7 +23,7 @@ const router = Router();
 router.get('/', getUser);
 
 router.get('/:id',[
-    check('id','No es un ID valido').isMongoId().custom(existeUserById),
+    check('id','No es un ID valido').isMongoId().custom(existeUsuarioById),
     validarCampos
 ], getUserId);
 
@@ -37,7 +37,7 @@ router.post('/',[
 ], postUser);
 
 router.put('/:id',[
-    check('id','No es un ID valido').isMongoId().custom(existeUserById),
+    check('id','No es un ID valido').isMongoId().custom(existeUsuarioById),
     check('rol').custom( isValidRole ),
     validarCampos
 ],putUser); 
@@ -48,7 +48,7 @@ router.delete('/:id',[
     validarJWT,
     // esAdminRole,
     tieneRole('ADMIN_ROLE','VENTAS_ROLE'),
-    check('id','No es un ID valido').isMongoId().custom(existeUserById),
+    check('id','No es un ID valido').isMongoId().custom(existeUsuarioById),
     validarCampos
 ],deleteUser);
 

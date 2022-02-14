@@ -13,16 +13,14 @@ const CategoriaSchema = Schema({
     },
     usuario:{
         type:Schema.Types.ObjectId,
-        refer:'Usuario',
+        ref:'Usuario',
         require:true
     }
 });
 
 CategoriaSchema.methods.toJSON = function(){
-
-    const {__v, _id, ...categoria} = this.toObject();
+    const {__v, _id, estado, ...categoria} = this.toObject();
     categoria.id = _id
-    
     return categoria;
 }
 

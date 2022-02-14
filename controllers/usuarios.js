@@ -66,7 +66,7 @@ const putUser = async (req = request, res = response) => {
         properties.password = encriptarPassword(password);
     }
 
-    const users = await Usuario.findByIdAndUpdate(id,properties);
+    const users = await Usuario.findByIdAndUpdate(id,properties, { new: true });
     
     res.json(users);
 }
@@ -83,7 +83,7 @@ const deleteUser = async (req = request, res = response) => {
 
     const { id } = req.params;
 
-    const users = await Usuario.findByIdAndUpdate(id, { estado : false });
+    const users = await Usuario.findByIdAndUpdate(id, { estado : false }, { new: true });
 
     const  authenticatedUser = req.userLogged;
     
