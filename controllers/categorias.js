@@ -75,14 +75,6 @@ const actualizarCategoria = async ( req = request , res = response ) => {
     data.nombre = data.nombre.toUpperCase();
     data.usuario = req.userLogged._id;
 
-    const existCategoria = await Categoria.findOne({ nombre: data.nombre });
-
-    if( existCategoria ){
-        return  res.status(400).json({
-            msg:'Esta categoria ya existe'
-        }); 
-    }
-
     const categoria = await Categoria.findByIdAndUpdate(id, data, { new: true }).populate('usuario','nombre');
     
     res.json(categoria);
