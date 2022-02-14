@@ -23,21 +23,33 @@ const router = Router();
 router.get('/', getUser);
 
 router.get('/:id',[
-    check('id','No es un ID valido').isMongoId().custom(existeUsuarioById),
+    check('id','No es un ID valido')
+        .isMongoId().bail()
+            .custom(existeUsuarioById),
     validarCampos
 ], getUserId);
 
 router.post('/',[
-    check('nombre','El nombre es obligatorio').not().isEmpty(),
-    check('password','El password debe ser 6 o mas caracteres').isLength({min:6}),
+    check('nombre','El nombre es obligatorio').notEmpty(),
+    check('password')
+        .notEmpty().withMessage('El password es obligatorio').bail()
+            .isLength({min:6}).withMessage('El password debe ser 6 o mas caracteres'),
     // check('rol','No es un rol valido').isIn('ADMIN_ROLE','USER_ROLE'),
-    check('correo','Correo no valido').isEmail().custom(existEmail),
-    check('rol').custom( isValidRole ),
+    check('correo')
+        .notEmpty()
+            .withMessage('El correo es obligatorio').bail()
+                .isEmail().withMessage('Correo no valido').bail()
+                    .custom(existEmail),
+    check('rol')
+        .notEmpty().withMessage('El rol es obligatorio').bail()
+            .custom( isValidRole ),
     validarCampos
 ], postUser);
 
 router.put('/:id',[
-    check('id','No es un ID valido').isMongoId().custom(existeUsuarioById),
+    check('id')
+        .isMongoId().withMessage('No es un ID valido').bail()
+            .custom(existeUsuarioById),
     check('rol').custom( isValidRole ),
     validarCampos
 ],putUser); 
@@ -48,7 +60,9 @@ router.delete('/:id',[
     validarJWT,
     // esAdminRole,
     tieneRole('ADMIN_ROLE','VENTAS_ROLE'),
-    check('id','No es un ID valido').isMongoId().custom(existeUsuarioById),
+    check('id')
+        .isMongoId().withMessage('No es un ID valido').bail()
+            .custom(existeUsuarioById),
     validarCampos
 ],deleteUser);
 

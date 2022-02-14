@@ -1,5 +1,5 @@
 const { request,response } = require("express")
-const { Categoria, Test } = require('../models');
+const { Categoria } = require('../models');
 
 
 
