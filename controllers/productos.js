@@ -4,23 +4,31 @@ const { Producto, Categoria } = require('../models');
 
 const  crearProducto = async ( req = request , res = response ) => {
 
-    const { nombre , precio, categoria, descripcion }  = req.body;
+    const { nombre, usuario, categoria,  ...body  }  = req.body;
+
+
+    const productoDB = await Producto.findOne({nombre:nombre.toUpperCase()});
+
+    if ( productoDB ) {
+        return res.status(400).json({
+            msg: `El Producto ${productoDB.nombre}, ya existe`
+        });
+    }
 
     const categoriaDB = await Categoria.findById(categoria);
 
     if ( !categoriaDB.estado ) {
         return res.status(400).json({
-            msg: `La categoria ${categoria}, esta inactiva`
+            msg: `La categoria ${categoriaDB.nombre}, esta inactiva`
         });
     }
 
     // Generar la data a guardar
     const data = {
-        nombre,
+        nombre : nombre.toUpperCase(),
         usuario: req.userLogged._id,
-        precio,
-        categoria: categoriaDB,
-        descripcion
+        categoria,
+        ...body
     }
     
     const producto = new Producto(data);
@@ -56,17 +64,18 @@ const obteneProducto = async ( req = request , res = response ) => {
 
     const { id  } = req.params;
 
-    const categoria = await Producto
+    const producto = await Producto
         .findById(id)
-        .populate('usuario', 'nombre');
+        .populate('usuario', 'nombre')
+        .populate('categoria', 'nombre'); 
 
-    if( !categoria.estado ){
+    if( !producto.estado ){
         return res.status(400).json({
-            msg:'Categoria no disponible'
+            msg:'Producto no disponible'
         });
     }
 
-    res.json(categoria);
+    res.json(producto);
 }
 
 const actualizarProducto = async ( req = request , res = response ) => {
@@ -75,21 +84,34 @@ const actualizarProducto = async ( req = request , res = response ) => {
 
     const { estado, usuario, ...data } = req.body;
     
-    data.nombre = data.nombre.toUpperCase();
+    if(data.nombre){
+        data.nombre = data.nombre.toUpperCase();
+    }
+
     data.usuario = req.userLogged._id;
 
-    const categoria = await Producto.findByIdAndUpdate(id, data, { new: true }).populate('usuario','nombre');
+    if(data.categoria){
+
+        const categoriaDB = await Categoria.findById({categoria: data.categoria , estado :true});
+
+        if ( !categoriaDB ) {
+            return res.status(400).json({
+                msg: `La categoria, no existe`
+            });
+        }
+    }
+
+    const producto = await Producto.findByIdAndUpdate(id, data, { new: true }).populate('usuario','nombre').populate('categoria','nombre');
     
-    res.json(categoria);
+    res.json(producto);
 }
 
 const borrarProducto = async ( req = request , res = response ) => {
 
     const { id  } = req.params;
 
-    const categoria = await Producto.findByIdAndUpdate(id,{estado : false}, { new: true }).populate('usuario','nombre');
-
-    res.json(categoria);
+    const producto = await Producto.findByIdAndUpdate(id,{estado : false}, { new: true });
+    res.json(producto);
 
 }
 

@@ -35,8 +35,6 @@ class Server {
 
         /** Public Directory */
         this.app.use(express.static('public'));
-
-        console.log(this.path.concat('/auth'));
         
     }
 
@@ -46,6 +44,7 @@ class Server {
        this.app.use(this.path.concat('/auth'), require('../routes/auth'));
        this.app.use(this.path.concat('/categorias'), require('../routes/categorias'));
        this.app.use(this.path.concat('/productos'), require('../routes/productos'));
+       this.app.use(this.path.concat('/buscar'), require('../routes/buscar'));
        
     }
 

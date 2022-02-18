@@ -29,17 +29,17 @@ const existeUsuarioById = async ( id ) => {
     }
 }
 
-const existeProductoById = async ( id ) => {
-    const existeCategoria = await Producto.findById(id);
-    if(!existeCategoria) {
-        throw new Error(`El producto ${id} no existe en la DB`);
-    }
-}
-
 const existeCategoriaById = async ( id ) => {
     const existeCategoria = await Categoria.findById(id);
     if(!existeCategoria) {
         throw new Error(`La categoria ${id} no existe en la DB`);
+    }
+}
+
+const existeProductoById = async ( id ) => {
+    const existeProducto = await Producto.findById(id);
+    if(!existeProducto) {
+        throw new Error(`El producto ${id} no existe en la DB`);
     }
 }
 

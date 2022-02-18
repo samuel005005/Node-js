@@ -31,15 +31,16 @@ router.post('/', [
                     .custom(existeCategoriaById).bail(),
     check('precio')
         .notEmpty().withMessage('El precio es obligatorio').bail()
-            .isCurrency().withMessage('El precio debe ser numerico'),
+            .isNumeric().withMessage('El precio debe ser numerico'),
     validarCampos
 ], crearProducto);
 
 // Actualizar una nueva tarea -  privador cual quiera con token valido
 router.put('/:id',[
     validarJWT,
-    check('id','No es un ID valido').isMongoId().custom(existeProductoById),
-    check('nombre','El nombre es obligatorio').not().isEmpty(),
+    check('id')
+        .isMongoId().withMessage('No es un ID valido').bail()
+            .custom(existeProductoById),
     validarCampos
 ],actualizarProducto);
 
@@ -47,7 +48,9 @@ router.put('/:id',[
 router.delete('/:id',[
     validarJWT,
     esAdminRole,
-    check('id','No es un ID valido').isMongoId().custom(existeProductoById),
+    check('id','No es un ID valido')
+        .isMongoId().withMessage('No es un ID valido').bail()
+            .custom(existeProductoById),
     validarCampos
 ],borrarProducto);
 
