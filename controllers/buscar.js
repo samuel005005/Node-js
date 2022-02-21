@@ -55,16 +55,30 @@ const buscarProductos = async ( termino = '', res =  response) => {
     const esMongoId = ObjectId.isValid( termino );
 
     if( esMongoId ){
-        const productos = await Producto.findById(termino);
+
+        const producto = await Producto.findById(termino);
+
+        if( producto ){
+            return res.json({
+                results : ( producto ) ? [ producto ] : []
+            });
+        }
+
+       const productos = await Producto.find({ categoria : ObjectId(termino)});
+
         return res.json({
             results : ( productos ) ? [ productos ] : []
         });
-    } 
+        
+    }
+
     const regx = RegExp(termino,'i');
+
     const  productos = await Producto.find({
         $or : [{ nombre:regx }, { descripcion:regx }],
         $and: [{ estado: true}]
-    });
+    }) .populate('categoria', 'nombre')
+
     return res.json({
         results : ( productos ) ? [ productos ] : []
     });
