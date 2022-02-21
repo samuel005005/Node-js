@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 const { ObjectId } = require('mongoose').Types;
-const { Usuario } = require("../models");
+const { Usuario, Categoria, Producto } = require("../models");
 
 const coleccionesPermitidas = [
     'usuarios',
@@ -20,9 +20,53 @@ const buscarUsuarios = async ( termino = '' , res = response ) => {
         });
     } 
 
-    const  usuario = await Usuario.find({ nombre:termino });
+    const regx = RegExp(termino,'i');
+
+    const  usuario = await Usuario.find({ 
+        $or: [{ nombre:regx },{ correo:regx }],
+        $and: [{ estado:true }]
+    });
     return res.json({
         results : ( usuario ) ? [ usuario ] : []
+    });
+
+}
+
+const buscarCategoria = async ( termino = '', res =  response) => {
+
+    const esMongoId = ObjectId.isValid( termino );
+
+    if( esMongoId ){
+        const categoria = await Categoria.findById(termino);
+        return res.json({
+            results : ( categoria ) ? [ categoria ] : []
+        });
+    } 
+    const regx = RegExp(termino,'i');
+    const  categoria = await Categoria.find({ nombre:regx , estado: true});
+    return res.json({
+        results : ( categoria ) ? [ categoria ] : []
+    });
+
+}
+
+const buscarProductos = async ( termino = '', res =  response) => {
+
+    const esMongoId = ObjectId.isValid( termino );
+
+    if( esMongoId ){
+        const productos = await Producto.findById(termino);
+        return res.json({
+            results : ( productos ) ? [ productos ] : []
+        });
+    } 
+    const regx = RegExp(termino,'i');
+    const  productos = await Producto.find({
+        $or : [{ nombre:regx }, { descripcion:regx }],
+        $and: [{ estado: true}]
+    });
+    return res.json({
+        results : ( productos ) ? [ productos ] : []
     });
 
 }
@@ -42,8 +86,10 @@ const buscar = async ( req = request , res = response ) => {
             await buscarUsuarios(termino, res);
             break;
         case 'categorias':
+            await buscarCategoria(termino, res);
             break;  
         case 'productos':
+            await buscarProductos(termino, res);
             break;
         default:
             res.status(500).json({
