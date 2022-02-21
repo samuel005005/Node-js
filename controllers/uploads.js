@@ -37,19 +37,23 @@ const cargarArchivos = async (req = request, res = response) => {
     try {
         archivos.map( 
             (archivo) => {
-                const  msg =   obtenerExtensionArchivo(archivo.name, extensionesValidas);
-                if( msg ){ 
-                    throw new ExtensionNoPermitida(msg)
-                } else {
-                    const uploadPath =  `${basePath}${archivo.name}`;
+                const  extension =   obtenerExtensionArchivo(archivo.name, extensionesValidas);
 
-                    archivo.mv(uploadPath, (error) => {
-                        if(error){
-                            throw new Error(error)
-                        }
-                    }); 
-                }
+                if( !extensionesValidas.includes(extension)) {
+                    throw new ExtensionNoPermitida(`La extension ${extension} no es permitida, validas : ${extensionesValidas}`);
+                }   
+
+                const nombreTemp = `${uuidv4()}.${extension}`;
+    
+                const uploadPath =  `${basePath}${nombreTemp}`;
+
+                archivo.mv(uploadPath, (error) => {
+                    if(error){
+                        throw new Error(error)
+                    }
+                }); 
             }
+            
         );  
 
         res.json({
