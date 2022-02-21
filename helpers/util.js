@@ -11,11 +11,10 @@ const obtenerExtensionArchivo = (nombreArchivo = '', extensionesValidas = []) =>
 
 
     if( !extensionesValidas.includes(extension)) {
-        return `La extension ${extension} no es permitida`;
+        return `La extension ${extension} no es permitida, validas : ${extensionesValidas}`;
     }
  
 }
-
 
 class ExtensionNoPermitida extends Error {
 

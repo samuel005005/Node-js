@@ -1,6 +1,7 @@
 const { request, response } = require('express');
 const path = require('path');
 const { obtenerExtensionArchivo, ExtensionNoPermitida } = require('../helpers');
+const { v4 : uuidv4 } = require('uuid');
 
 const cargarArchivos = async (req = request, res = response) => {
 
@@ -18,76 +19,55 @@ const cargarArchivos = async (req = request, res = response) => {
 
     const basePath = path.join(__dirname, `../uploads/`);
 
-    const { archivos } = req.files;
+    let { archivos } = req.files;
 
 
      /** Validar extension */
      const extensionesValidas = ['jpg','jpeg','csv','json'];
+
     /**
      * Si es un solo archivo
      */
-     if ( !Array.isArray(archivos) ){
 
-         const  msg =   obtenerExtensionArchivo(archivos.name, extensionesValidas);
-         if( msg ){
-            return res.status(400).json({ msg });
-         }
+    if ( !Array.isArray(archivos) ) {
+        archivos = [ archivos ];
+    }
 
-        const uploadPath = `${basePath}${archivos.name}`
 
-        archivos.mv(uploadPath, (error) => {
-    
-            if(error){
-                return res.status(500).json({error});
-            }
-    
-        });
+    try {
+        archivos.map( 
+            (archivo) => {
+                const  msg =   obtenerExtensionArchivo(archivo.name, extensionesValidas);
+                if( msg ){ 
+                    throw new ExtensionNoPermitida(msg)
+                } else {
+                    const uploadPath =  `${basePath}${archivo.name}`;
 
-        return  res.json({
-            msg: "Subido correctamente"
-        });
-
-    } else {
-
-        try {
-            archivos.map( 
-                (archivo) => {
-                    const  msg =   obtenerExtensionArchivo(archivo.name, extensionesValidas);
-                    if( msg ){ 
-                        throw new ExtensionNoPermitida(msg)
-                    } else {
-                        const uploadPath =  `${basePath}${archivo.name}`;
-    
-                        archivo.mv(uploadPath, (error) => {
-                            if(error){
-                                throw new Error(error)
-                            }
-                        }); 
-                    }
+                    archivo.mv(uploadPath, (error) => {
+                        if(error){
+                            throw new Error(error)
+                        }
+                    }); 
                 }
-            );  
-
-            res.json({
-                msg: "Subidos correctamente"
-            });
-
-        } catch (error) {
-
-            if( error instanceof ExtensionNoPermitida){
-                return res.status(400).json({
-                    msg: error.message
-                });
-            }else {
-                res.status(500).json({
-                    msg: error.message
-                });
             }
-            
+        );  
+
+        res.json({
+            msg: "Subidos correctamente"
+        });
+
+    } catch (error) {
+
+        if( error instanceof ExtensionNoPermitida){
+            return res.status(400).json({
+                msg: error.message
+            });
+        }else {
+            res.status(500).json({
+                msg: error.message
+            });
         }
-
-
-    
-       
+        
     }
 
 }
