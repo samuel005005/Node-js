@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { cargarArchivos, actualizarArchivo } = require('../controllers');
+const { cargarArchivos, actualizarArchivo,mostrarImagen } = require('../controllers');
 const { coleccionesPermitidas } = require('../helpers');
 const { validarJWT, validarArchivos, validarCampos } = require('../middlewares');
 
@@ -21,6 +21,11 @@ router.put('/:coleccion/:id', [
     validarCampos
 ],actualizarArchivo);
 
-
+router.get('/:coleccion/:id',[
+    validarJWT,
+    check('id','El id es invalido').isMongoId().bail(),
+    check('coleccion').custom( coleccion => coleccionesPermitidas( coleccion, ['usuarios','productos'])),
+    validarCampos
+],mostrarImagen);
 
 module.exports = router;
