@@ -15,6 +15,7 @@ router.post('/', [
 
 router.put('/:coleccion/:id', [
     validarJWT,
+    validarArchivos,
     check('id','El id es invalido').isMongoId().bail(),
     check('coleccion').custom( coleccion => coleccionesPermitidas( coleccion, ['usuarios','productos'])),
     validarCampos

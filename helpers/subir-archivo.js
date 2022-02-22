@@ -19,7 +19,7 @@ class ExtensionNoPermitida extends Error {
 }
 
 
-const subirArchivo = ( archivos, extensionesValidas = ['jpg','jpeg','csv','json'], carpeta = '' ) => {
+const subirArchivo = ( archivos, extensionesValidas = ['jpg','jpeg','png'], carpeta = '' ) => {
 
    return new Promise( (resolve, reject)  => {
 
