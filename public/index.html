@@ -9,6 +9,11 @@
 </head>
 <body class="container">
     <h1 class="mt-2">Socket Client</h1>
+    <p>
+        Server Status:
+        <span id="lblOnline" style="display: none;" class="text-success">Online</span>
+        <span id="lblOffline" style="display: none;" class="text-danger">Offline</span>
+    </p>
 
     <script src="./socket.io/socket.io.js"></script>
     <script src="js/socket-client.js"></script>
