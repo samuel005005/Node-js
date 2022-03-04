@@ -6,16 +6,15 @@ const socketController =  ( socket ) => {
 
     socket.emit( 'last-ticket', ticketControl.last );
     socket.emit ( 'current-ticket', ticketControl.lastFour );
+    socket.emit('pedding-ticket', ticketControl.tickets.length);
     
     socket.on( 'next-ticket', (payload , callback ) => { 
         const next  = ticketControl.next();
         callback( next );
-        // socket.broadcast.emit('next-ticket', payload);
+        socket.broadcast.emit('pedding-ticket', ticketControl.tickets.length);
     });
 
     socket.on( 'attend-ticket', ( { desktop }, callback) => {
-
-      
 
         if( !desktop ){
             return callback ({
@@ -35,12 +34,15 @@ const socketController =  ( socket ) => {
         /**Notificar cambios en los ultimos cuatros**/
 
         socket.broadcast.emit ( 'current-ticket', ticketControl.lastFour );
+        socket.emit('pedding-ticket', ticketControl.tickets.length);
+        socket.broadcast.emit('pedding-ticket', ticketControl.tickets.length);
         return callback ({
             ok:true,
             ticket
         })
 
     }); 
+
 }
 
 module.exports = {
