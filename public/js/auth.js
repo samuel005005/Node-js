@@ -28,6 +28,7 @@ const url = ( window.location.hostname.includes('localhost') )
           }
 
           localStorage.setItem('token', token);
+          window.location = 'chat.html';
 
         }).catch( err => console.err(err));
 
@@ -52,6 +53,7 @@ const url = ( window.location.hostname.includes('localhost') )
         .then( resp => resp.json() )
         .then( ({ token }) => {
             localStorage.setItem('token', token);  
+            window.location = 'chat.html';
         })
         .catch( console.log );
         
