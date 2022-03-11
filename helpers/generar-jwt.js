@@ -1,6 +1,7 @@
 
 const jsonwebtoken = require('jsonwebtoken');
-const { Usuario } =  require('../models/index');
+
+const Usuario = require('../models/usuario');
 
 const generarJWT = ( uid = '' ) => {
 
@@ -29,11 +30,18 @@ const comprobarJWT = async ( token = '') => {
         }
 
      const { uid } = jsonwebtoken.verify(token, process.env.SECRET_OR_PRIVATEKEY);
-
+  
      const usuario = await Usuario.findById( uid );
 
+   
      if( usuario ){
-         return null
+
+        if(!usuario.estado){
+            return null;
+        }
+         return usuario;
+     } else {
+         return null;
      }
 
     } catch (error) {

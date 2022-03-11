@@ -6,7 +6,7 @@ const utils = require('./util');
 const subirArchivo = require('./subir-archivo');
 
 module.exports = {
-        generarJWT,
+    ...generarJWT,
     ...dbValidator,
     ...googleVerify,
     ...utils,
