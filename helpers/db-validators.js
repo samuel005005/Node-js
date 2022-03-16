@@ -1,8 +1,13 @@
 const bcryptjs = require('bcryptjs');
 
-const { Role, Usuario, Categoria, Producto} = require('../models');
+const Producto = require('../models/producto');
+const Role = require('../models/role');
+const Categoria = require('../models/categoria');
+const Usuario = require('../models/usuario');
 
 const isValidRole = async ( rol = '') => {
+
+    console.log(Usuario)
     const existeRol = await Role.findOne({ role:rol }); 
     if(!existeRol){
         throw new Error(`El rol ${rol} registrado en la DB`);

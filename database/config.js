@@ -8,12 +8,12 @@ const dbConnection = async () => {
             useNewUrlParser:true,
             useUnifiedTopology:true,
         });
-
+        
         console.log('Data base is online '.green); 
 
     } catch (error) {
-        console.log(error.message); 
-        throw new Error('Error starting data base');
+        console.log(error); 
+        // throw new Error('Error starting data base');
     }
 }
 

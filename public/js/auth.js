@@ -24,7 +24,7 @@ const url = ( window.location.hostname.includes('localhost') )
         .then( resp => resp.json())
         .then( ({ msg , token }) => {
           if( msg ){
-            return console.err(msg);
+            return console.log(msg);
           }
 
           localStorage.setItem('token', token);
@@ -62,6 +62,6 @@ const url = ( window.location.hostname.includes('localhost') )
     function signOut() {
         var auth2 = gapi.auth2.getAuthInstance();
         auth2.signOut().then(function () {
-        console.log('User signed out.');
+            
         });
     }

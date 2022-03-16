@@ -53,16 +53,16 @@ const conectarSocket = async () => {
 
 
     socket.on('disconnect' , () => {
-        
         console.log('Socket disconnect')
     });
 
-    socket.on('recibir-mensajes', () => {
-
+    socket.on('recibir-mensajes', ( payload ) => {
+        console.log(payload);
     });
 
-    socket.on('usuariosActivos', () => {
-        
+    socket.on('usuariosActivos', ( payload ) => {
+        console.log(payload);
+        dibujarUsuarios(payload);
     });
 
     socket.on('mensaje-privado', () => {
@@ -71,9 +71,43 @@ const conectarSocket = async () => {
 
 }
 
+btnSalir.addEventListener('click', () => {
+    localStorage.removeItem('token');
+    window.location = 'index.html';
+});
+
+const dibujarUsuarios = ( usuarios = [] ) => {
+    let usersHTML = '';
+
+    usuarios.forEach( ({ nombre, uid }) => {
+        usersHTML +=`
+            <li>
+                <p>
+                    <h5 class ="text-success"> ${ nombre }</h5>
+                    <span class="fs-6 text-muted"> ${ uid } </span>
+                </p>
+            </li>   
+        `;
+    });
+    ulUsuarios.innerHTML = usersHTML;
+
+}
+
+    txtMensaje.addEventListener('keyup', ({ keyCode }) => {
+        const mensaje = txtMensaje.value;
+        const uid = txtUid.value;
+        if( keyCode !== 13){ return ;}
+        if( mensaje.length == 0) { return; }
+
+        socket.emit('enviar-mensaje', { mensaje, uid });
+        
+        txtMensaje.value = "";
+
+    });
+
 const main = async () => {
     await validarJWT();
-
+ 
 }
 
 
