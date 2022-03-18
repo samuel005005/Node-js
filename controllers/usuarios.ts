@@ -1,16 +1,30 @@
  import { Request , Response } from 'express';
+import Usuario from '../models/usuario';
  
- export const obtenerUsuarios = ( req: Request, res: Response ) => {  
+ export const obtenerUsuarios =  async ( req: Request, res: Response ) => {  
+
+    const usuarios = await Usuario.findAll();
+
     res.json({
-        msg: " obtener Usuarios"
+        msg: " obtener Usuarios",
+        usuarios
     })
  }
 
- export const obtenerUsuario = ( req: Request, res: Response ) => {
+ export const obtenerUsuario = async ( req: Request, res: Response ) => {
     const { id } = req.params;
 
+    const usuario = await Usuario.findByPk(id);
+
+    if( !usuario ){
+        return res.json({
+            msg: `No existe usuario con el id ${id}`
+        });
+    }
+
     res.json({
-        msg: "obtenerUsuario"
+        msg: "obtenerUsuario",
+        usuario
     })
  }
 

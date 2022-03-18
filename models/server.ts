@@ -1,6 +1,7 @@
 import express , { Application } from 'express';
 import cors from "cors";
 import usuariosRouter  from "../routers/usuario";
+import dbConnection from './connections';
 
 
 class Server {
@@ -17,12 +18,24 @@ class Server {
         /** Main Route */
         this.path = '/api/';
 
+        /** Database Connect **/
+        this.dbConnection();
+        
         /** Middlewares */
         this.middlewares();
         
         /** Route of my application */
         this.routes();
 
+    }
+
+    async dbConnection(){
+        try {
+            await dbConnection.authenticate();
+            console.log("Database conected")
+        } catch (error) {
+            throw new Error(`Error al conectarse a la base de datos ${error}`);
+        }
     }
     
     middlewares(){
